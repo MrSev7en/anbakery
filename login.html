@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/styles/login.css" />
+  </head>
+  <body>
+    <form id="form">
+      <span>Faça login</span>
+      <span>para acessar ao sistema!</span>
+      <input type="text" placeholder="Login" required id="login" />
+      <input
+        type="password"
+        placeholder="Senha"
+        required
+        minlength="8"
+        maxlength="128"
+        id="password"
+      />
+      <button>Entrar</button>
+    </form>
+    <script type="text/javascript">
+      const form = document.getElementById('form');
+
+      form.addEventListener('submit', onFormSubmit, true);
+
+      function onFormSubmit(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        doLogin();
+      }
+
+      function doLogin() {
+        const login = String(document.getElementById('login')?.value);
+        const password = String(document.getElementById('password')?.value);
+
+        if (login === 'padeiro' && password === '87654321') {
+          successLogin();
+          return;
+        }
+
+        if (login === 'eduardo' && password === '12345678') {
+          successLogin();
+          return;
+        }
+
+        if (login === 'joao' && password === '123@teste') {
+          successLogin();
+          return;
+        }
+
+        failedLogin();
+      }
+
+      function successLogin() {
+        window.location.href = '/proxy/5500/produtos.html';
+      }
+
+      function failedLogin() {
+        alert(
+          'Falha ao fazer login, verifique se os dados de acesso estão corretos.',
+        );
+      }
+    </script>
+  </body>
+</html>

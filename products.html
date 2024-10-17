@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/styles/products.css" />
+  </head>
+  <body>
+    <div>
+      <h2>Produtos</h2>
+      <section id="products"></section>
+    </div>
+    <div>
+      <h2>Carrinho</h2>
+      <section id="cart"></section>
+    </div>
+    <script type="text/javascript">
+      var cart = [];
+      var products = [
+        {
+          name: 'Pão Francês',
+          price: 35,
+          image:
+            'https://http2.mlstatic.com/D_NQ_NP_865613-MLB44442939291_122020-O.webp',
+        },
+        {
+          name: 'Coca-Cola',
+          price: 500,
+          image:
+            'https://blogdapublicidade.com/wp-content/uploads/2024/04/historia-logotipo-coca-cola.jpg',
+        },
+        {
+          name: 'Mortadela',
+          price: 200,
+          image:
+            'https://tezegw.vteximg.com.br/arquivos/ids/206731-1000-1000/9167_1.png?v=638100758197400000',
+        },
+        {
+          name: 'Carolina',
+          price: 300,
+          image:
+            'https://www.receiteria.com.br/wp-content/uploads/carolina-doce.jpeg',
+        },
+        {
+          name: 'Croissant',
+          price: 400,
+          image:
+            'https://www.estadao.com.br/resizer/xhRmOJ1yOwOzoNIlE4CO7EEfP6I=/arc-anglerfish-arc2-prod-estadao/public/LVHDPIGTS5HNTNTTEJXFB3HHLE.jpg',
+        },
+        {
+          name: 'Fatia de Mini Pizza',
+          price: 450,
+          image:
+            'https://grupodocedoce.com.br/storage/produtos/53/panutti-mini-pizza-de-presunto-e-queijo-1582208713.JPG',
+        },
+        {
+          name: 'Pão de Queijo',
+          price: 350,
+          image:
+            'https://static.itdg.com.br/images/360-240/91f752bd7f720be5bc6d209dae386c73/pao-de-queijo-facil-e-delicioso-1-.png',
+        },
+        {
+          name: 'Sonho',
+          price: 400,
+          image:
+            'https://claudia.abril.com.br/wp-content/uploads/2020/02/receita-sonho-doce-1.jpg',
+        },
+        {
+          name: 'Rosquinha',
+          price: 300,
+          image:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSDpKu_g0ohuEnSOkmalGeIeIs-WMzSt0mEA&s',
+        },
+        {
+          name: 'Bolo de Fubá',
+          price: 500,
+          image:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_K9_ToeaKHCBZ6GZyinKOJ06v7L47HDflUA&s',
+        },
+        {
+          name: 'Café',
+          price: 200,
+          image:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwywbq5VxCHCeoOCdF8iqSRtrRo0azhMSt1A&s',
+        },
+        {
+          name: 'Pingado',
+          price: 250,
+          image:
+            'https://blog.bicafebrasil.com.br/wp-content/uploads/2023/08/cafe-pingado.jpg',
+        },
+      ];
+    </script>
+    <script type="text/javascript">
+      function createProducts() {
+        const productsSection = document.getElementById('products');
+
+        products.forEach((product) => {
+          const productElement = document.createElement('div');
+          const imageElement = document.createElement('img');
+          const nameElement = document.createElement('span');
+          const priceElement = document.createElement('span');
+          const buttonElement = document.createElement('button');
+
+          imageElement.src = product.image;
+          nameElement.innerText = product.name;
+          priceElement.innerText = `R$ ${product.price / 100}`;
+          buttonElement.innerText = 'Adicionar';
+          buttonElement.onclick = () => addToCart(product);
+
+          productElement.appendChild(imageElement);
+          productElement.appendChild(nameElement);
+          productElement.appendChild(priceElement);
+          productElement.appendChild(buttonElement);
+          productsSection.appendChild(productElement);
+        });
+      }
+
+      function addToCart(product) {
+        if (cart.some((cartProduct) => cartProduct.name === product.name)) {
+          cart = cart.map((cartProduct) => {
+            if (cartProduct.name === product.name) {
+              return { ...cartProduct, quantity: cartProduct.quantity + 1 };
+            }
+
+            return cartProduct;
+          });
+        } else {
+          cart.push({ ...product, quantity: 1 });
+        }
+
+        updateCart();
+      }
+
+      function removeFromCart(productName) {
+        cart = cart.filter((product) => product.name !== productName);
+        updateCart();
+      }
+
+      function clearCart() {
+        cart = [];
+        updateCart();
+      }
+
+      function updateCart() {
+        const cartSection = document.getElementById('cart');
+        cartSection.innerHTML = '';
+
+        cart.forEach((product) => {
+          const productElement = document.createElement('span');
+          const nameElement = document.createElement('span');
+          const priceElement = document.createElement('span');
+          const removeElement = document.createElement('span');
+
+          nameElement.innerText = `${product.quantity}x ${product.name}`;
+          priceElement.innerText = `R$ ${product.price / 100}`;
+          removeElement.innerText = 'Remover';
+          removeElement.onclick = () => removeFromCart(product.name);
+
+          productElement.appendChild(nameElement);
+          productElement.appendChild(priceElement);
+          productElement.appendChild(removeElement);
+          cartSection.appendChild(productElement);
+        });
+
+        const totalElement = document.createElement('p');
+
+        totalElement.id = 'total';
+        totalElement.innerText = `Total da compra: R$ ${
+          cart.reduce(
+            (total, product) => total + product.price * product.quantity,
+            0,
+          ) / 100
+        }`;
+
+        const buyButton = document.createElement('button');
+
+        buyButton.innerText = 'Finalizar compra';
+        buyButton.onclick = buyAllProducts;
+
+        cartSection.appendChild(totalElement);
+        cartSection.appendChild(buyButton);
+      }
+
+      function buyAllProducts() {
+        if (cart.length) {
+          alert('Todos os produtos foram comprados com sucesso!');
+          clearCart();
+        }
+      }
+
+      createProducts();
+      updateCart();
+    </script>
+  </body>
+</html>
